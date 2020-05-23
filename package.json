@@ -1,0 +1,23 @@
+{
+  "name": "currencyconverter",
+  "version": "1.0.0",
+  "description": "Node.js Currency Converter",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run -s lint",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pienskoi/CurrencyConverter.git"
+  },
+  "author": "Volodymyr Pienskoi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Pienskoi/CurrencyConverter/issues"
+  },
+  "homepage": "https://github.com/Pienskoi/CurrencyConverter",
+  "devDependencies": {
+    "eslint": "^7.1.0"
+  }
+}
