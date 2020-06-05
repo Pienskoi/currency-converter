@@ -6,13 +6,15 @@ const url = 'https://api.exchangeratesapi.io';
 const convert = options => new Promise((resolve, reject) => {
   const from = options.from;
   const to = options.to;
-  const value = options.value || 1;
+  let value;
+  if (!Object.keys(options).includes('value')) value = 1;
+  else value = options.value;
   const day = options.day || 'latest';
   if (!from) {
     reject(new Error('No currency to convert from.'));
   } else if (!to) {
     reject(new Error('No currency to convert to.'));
-  } else if (typeof value !== 'number') {
+  } else if (typeof value !== 'number' || Number.isNaN(value)) {
     reject(new Error('Value to convert is not a number.'));
   }
 
