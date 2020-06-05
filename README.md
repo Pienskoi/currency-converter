@@ -6,7 +6,7 @@ A simple Node.js asynchronous currency converter based on [exchangeratesapi.io](
 
 ## Usage
 
-Import [`convert` function](./index.js) and use it as a Promise.
+Import [convert function](./index.js) and use it as a Promise.
 
 ```
 convert({ value: 2, from: 'USD', to: 'JPY', day: '2020-05-25' }).then(value => {
@@ -16,11 +16,12 @@ convert({ value: 2, from: 'USD', to: 'JPY', day: '2020-05-25' }).then(value => {
     // handle error here
   });
 ```
-Day argumet should be `YYYY-MM-DD` fromat. Without it function will return value based on last currency rates api update.
+Day argument should be `YYYY-MM-DD` format. Without that argument function will return value based on last exchange rates api update. 
+Without value argument function will convert one currency unit. 
 
 ## Usage example
 
-[consoleapp.js](./consoleapp.js) is usage example made with async/await and `readline` that allows you to input parameters to convert in command line.
+[consoleapp.js](./consoleapp.js) is usage example made with async/await and `readline` that allows you to input parameters for converting in command line.
 
 ## Issues
 
