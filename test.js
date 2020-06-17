@@ -1,43 +1,66 @@
 'use strict';
 
 const assert = require('assert').strict;
+const nock = require('nock');
 
 const convert = require('./index.js');
 
+const url = 'https://api.exchangeratesapi.io';
+const pathLatest = '/latest?base=USD';
+const responseLatest = {
+  rates: {
+    PHP: 10,
+    USD: 1
+  },
+  base: 'USD'
+};
+const pathByDay = '/2020-06-28?base=EUR';
+const responseByDay = {
+  rates: {
+    JPY: 20,
+    EUR: 1
+  },
+  base: 'EUR',
+  date: '2020-06-28'
+};
+
 const tests = [
-  [{ from: 'USD', to: 'JPY' },                              'No value and day'],
-  [{ value: 0.1, from: 'JPY', to: 'JPY' },                  'No date'         ],
-  [{ value: 5, from: 'EUR', to: 'BRL', day: '2019-06-28' }, 'All parameters'  ],
-  [{ value: 0, from: 'BRL', to: 'USD' },                    'Zero value'      ]
+  [{ from: 'USD', to: 'PHP' },
+    10, 'Default value and day'],
+  [{ value: 0.1, from: 'USD', to: 'PHP' },
+    1, 'Default date'],
+  [{ value: 0, from: 'USD', to: 'PHP' },
+    0, 'Zero value'],
+  [{ from: 'USD', to: 'USD' },
+    1, 'Same currencies'],
+  [{ from: 'EUR', to: 'JPY', day: '2020-06-28' },
+    20, 'Default value'],
+  [{ value: 5, from: 'EUR', to: 'JPY', day: '2020-06-28' },
+    100, 'All parameters']
 ];
-const failTests = [
-  [{ },                                           'No parameters'     ],
-  [{ value: 0.5, from: 'BTC', to: 'ETH' },        'Invalid currencies'],
-  [{ from: 'USD', to: 'JPY', day: '06-28-2029' }, 'Invalid day'       ],
-  [{ value: 'one', from: 'USD', to: 'JPY' },      'Invalid value'     ]
-];
+
+const scope = (url, path, response) => {
+  nock(url)
+    .persist()
+    .get(path)
+    .reply(200, response);
+};
 
 const runTests = async () => {
   const results = [];
   for (const test of tests) {
-    const [par, name] = test;
+    const [par, expected, name] = test;
+    const result = await convert(par);
     try {
-      await assert.doesNotReject(convert(par), `In test "${name}"`);
+      assert.strictEqual(result, expected, `Error in test "${name}"`);
     } catch (err) {
       const { message, operator } = err;
-      results.push({ message, par, operator });
-    }
-  }
-  for (const failTest of failTests) {
-    const [par, name] = failTest;
-    try {
-      await assert.rejects(convert(par), `In test "${name}"`);
-    } catch (err) {
-      const { message, operator } = err;
-      results.push({ message, par, operator });
+      results.push({ message, expected, result, operator });
     }
   }
   console.table(results);
 };
 
+scope(url, pathLatest, responseLatest);
+scope(url, pathByDay, responseByDay);
 runTests();
