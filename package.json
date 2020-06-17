@@ -4,7 +4,7 @@
   "description": "Node.js Currency Converter",
   "main": "index.js",
   "scripts": {
-    "test": "npm run -s lint",
+    "test": "npm run -s lint && node test.js",
     "lint": "eslint ."
   },
   "repository": {
