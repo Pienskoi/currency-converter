@@ -21,10 +21,14 @@ const convert = options => new Promise((resolve, reject) => {
     let data = '';
     res.on('data', chunk => { data += chunk; });
     res.on('end', () => {
-      const parsedData = JSON.parse(data);
-      const rate = parsedData.rates[to];
-      const convertedValue = value * rate;
-      resolve(convertedValue);
+      try {
+        const parsedData = JSON.parse(data);
+        const rate = parsedData.rates[to];
+        const convertedValue = value * rate;
+        resolve(convertedValue);
+      } catch (err) {
+        reject(err);
+      }
     });
   }).on('error', e => {
     reject(e);
