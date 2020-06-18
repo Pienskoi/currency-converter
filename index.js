@@ -17,15 +17,15 @@ const convert = ({ value = 1, from, to, day = 'latest' }) => {
       res.on('end', () => {
         try {
           const parsedData = JSON.parse(data);
-          const rate = parsedData.rates[to];
-          const convertedValue = value * rate;
+          const currencyRate = parsedData.rates[to];
+          const convertedValue = value * currencyRate;
           resolve(convertedValue);
         } catch (err) {
           reject(err);
         }
       });
-    }).on('error', e => {
-      reject(e);
+    }).on('error', err => {
+      reject(err);
     });
   });
 };
