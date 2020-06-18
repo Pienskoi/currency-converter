@@ -1,11 +1,13 @@
 'use strict';
 
 const https = require('https');
-const url = 'https://api.exchangeratesapi.io';
 
 const convert = ({ value = 1, from, to, day = 'latest' }) => {
+  const url = 'https://api.exchangeratesapi.io';
+  const path = `/${day}?base=${from}`;
+
   return new Promise((resolve, reject) => {
-    https.get(`${url}/${day}?base=${from}`, res => {
+    https.get(url + path, res => {
       const code = res.statusCode;
       if (code !== 200) {
         reject(new Error(`HTTP status code ${code}`));
